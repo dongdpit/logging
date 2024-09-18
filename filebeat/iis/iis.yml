@@ -1,0 +1,7 @@
+- module: iis
+  access:
+    enabled: true
+    var.paths= ["C:\inetpub\logs\LogFiles\W3SVC1\access.log*"]
+  error:
+    enabled: true
+    var.paths= ["C:\inetpub\logs\LogFiles\W3SVC1\error.log*"]
