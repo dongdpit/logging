@@ -1,0 +1,4 @@
+- module: panw
+  panos:
+    enabled: true
+    var.input: syslog
