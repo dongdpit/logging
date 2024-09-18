@@ -1,0 +1,17 @@
+- type: syslog
+  enabled: true
+  max_message_size: 10MiB
+  protocol.udp:
+    host: "ip:port"
+  #protocol.tcp:
+  #  hosts: "ip:port"	
+  keep_null: true
+  timeout: 10
+  fields_under_root: true
+  fields:
+    observer:
+      vendor: Palo Alto Networks
+      product: PAN-OS
+      type: firewall
+  #encoding: utf-8
+  #ignore_older: 3h
