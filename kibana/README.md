@@ -2,11 +2,11 @@ https://www.elastic.co/guide/en/kibana/current/rpm.html
 
 Cấu hình kibana.yml
 ---
-server.port: 5601
+server.port: port
 
-server.host: "10.26.7.164"
+server.host: "ip"
 
-server.publicBaseUrl: "http://10.26.7.164:5601" (Nếu môi trường Production)
+server.publicBaseUrl: "http://ip:port" (Nếu môi trường Production)
 
 Tạo token từ elasticsearch và kibana code
 ---
