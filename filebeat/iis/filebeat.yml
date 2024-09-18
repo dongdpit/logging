@@ -1,0 +1,7 @@
+# ------------------------------ Kafka Output -------------------------------
+output.kafka:
+  # The Logstash hosts
+  hosts: ["ip:port"]
+  topic: topcic-name
+  partition.round_robin:
+    reachable_only: true
