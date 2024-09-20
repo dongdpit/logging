@@ -1,0 +1,24 @@
+when CLIENT_ACCEPTED {
+    set hsl [HSL::open -publisher /Common/ELK_Publisher]
+}
+when HTTP_REQUEST {
+    set req_time [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}]
+    set req_ipclient [IP::client_addr]
+    set req_portclient [TCP::client_port]
+    set req_method [HTTP::method]
+    set req_iplocal [IP::local_addr]
+    set req_portlocal [TCP::local_port]
+    set req_host [HTTP::host]
+    set req_url [HTTP::uri]
+    set req_cookie [HTTP::cookie names]
+    set req_cookie_value [HTTP::cookie $req_cookie]
+    }
+when HTTP_RESPONSE {
+    set res_time [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}]     
+    set res_ipclient [IP::client_addr]
+    set res_portclient [TCP::client_port]
+    set res_iplocal [IP::local_addr]
+    set res_portlocal [TCP::local_port]
+    set res_stt [HTTP::status]
+    HSL::send $hsl "$req_time $req_ipclient $req_portclient $req_method $req_iplocal $req_portlocal $req_host $req_url $res_time $res_iplocal $res_portlocal $res_ipclient $res_portclient $res_stt -$req_cookie $req_cookie_value"
+}
