@@ -20,7 +20,7 @@ network.host: IP
 
 discovery.seed_hosts: ["ip:port-host1", "ip:port-host2"]
 
-cluster.initial_master_nodes: ["ip-node-1", "ip-node-2"]
+cluster.initial_master_nodes: ["ip-master"]
 
 xpack.ml.enabled: false (Nếu máy chủ đời cũ)
 
