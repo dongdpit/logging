@@ -8,6 +8,8 @@ server.host: "ip"
 
 server.publicBaseUrl: "http://ip:port" (Nếu môi trường Production)
 
+elasticsearch.hosts: ["https://ip:port"]
+
 Tạo token từ elasticsearch và kibana code
 ---
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
