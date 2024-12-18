@@ -30,6 +30,10 @@ xpack.fleet.registryProxyUrl: "http://ip:port" (Nếu mạng dùng qua proxy)
 ---
 /usr/share/elasticsearch/bin/elasticsearch-reset-password -i -u elastic
 
+Check
+---
+curl -k -u elastic:password https://ip:port/_cluster/health?pretty
+
 Tạo token trên node chính
 ---
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s node
