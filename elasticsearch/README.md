@@ -24,8 +24,6 @@ cluster.initial_master_nodes: ["node.name"]
 
 xpack.ml.enabled: false (Nếu máy chủ đời cũ)
 
-xpack.fleet.registryProxyUrl: "http://ip:port" (Nếu mạng dùng qua proxy)
-
 Đổi password elastic
 ---
 /usr/share/elasticsearch/bin/elasticsearch-reset-password -i -u elastic
