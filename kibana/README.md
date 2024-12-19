@@ -12,7 +12,7 @@ elasticsearch.hosts: ["https://ip:port"]
 
 xpack.fleet.registryProxyUrl: "http://ip:port" (Nếu mạng dùng qua proxy)
 
-Tạo token từ elasticsearch và kibana code
+Tạo token từ elasticsearch và lấy kibana code
 ---
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
 
