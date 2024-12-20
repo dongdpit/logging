@@ -12,6 +12,11 @@ elasticsearch.hosts: ["https://ip:port"]
 
 xpack.fleet.registryProxyUrl: "http://ip:port" (Nếu mạng dùng qua proxy)
 
+##run openssl rand -hex 32 => encryptionKey
+
+xpack.encryptedSavedObjects.encryptionKey: ""
+
+
 Tạo token từ elasticsearch và lấy kibana code
 ---
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
