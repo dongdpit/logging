@@ -8,8 +8,6 @@ server.host: "ip"
 
 server.publicBaseUrl: "http://ip:port" (Nếu môi trường Production)
 
-elasticsearch.hosts: ["https://ip:port"]
-
 xpack.fleet.registryProxyUrl: "http://ip:port" (Nếu mạng dùng qua proxy)
 
 ##run openssl rand -hex 32 => encryptionKey
