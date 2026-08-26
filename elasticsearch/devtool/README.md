@@ -9,22 +9,12 @@
 * [Cluster](#-cluster)
 * [Nodes](#-nodes)
 * [Indices](#-indices)
-* [Mappings](#-mappings)
 * [Index Templates](#-index-templates)
 * [Aliases](#-aliases)
 * [ILM](#-ilm)
 * [Rollover](#-rollover)
-* [Search](#-search)
-* [Documents](#-documents)
 * [Reindex](#-reindex)
-* [Ingest Pipeline](#-ingest-pipeline)
-* [Shards](#-shards)
-* [Disk & Allocation](#-disk--allocation)
-* [Recovery](#-recovery)
-* [Tasks](#-tasks)
-* [Snapshots](#-snapshots)
 * [Troubleshooting](#-troubleshooting)
-* [Quick Reference](#-quick-reference)
 
 ---
 
@@ -42,6 +32,7 @@ GET _cluster/state
 
 ```http
 GET _cat/nodes?v
+GET _cat/allocation?v
 GET _nodes/stats
 GET _nodes/stats/jvm
 GET _nodes/stats/os
@@ -135,17 +126,6 @@ POST /_index_template/_simulate_index/log-product-iis17x-test-000001
 
 # Aliases
 
-Aliases provide a logical name for one or more indices.
-
-Example:
-
-```text
-                 logiis17x-alias
-                        │
-                        ▼
-             log-product-iis17x-000001
-```
-
 ## List/Get Aliases
 
 ```http
@@ -162,7 +142,8 @@ POST _aliases
     {
       "add": {
         "index": "log-product-iis17x-000001",
-        "alias": "logiis17x-alias"
+        "alias": "logiis17x-alias",
+        "is_write_index": true
       }
     }
   ]
@@ -207,7 +188,7 @@ Use `_ilm/explain` when troubleshooting:
 
 ---
 
-# 🔄 Rollover
+# Rollover
 
 Typical architecture:
 
@@ -254,109 +235,7 @@ POST logiis17x-alias/_rollover
 
 ---
 
-# 🔎 Search
-
-## Match All
-
-```http
-GET log-product-iis17x-*/_search
-{
-  "query": {
-    "match_all": {}
-  }
-}
-```
-
-## Match
-
-```http
-GET log-product-iis17x-*/_search
-{
-  "query": {
-    "match": {
-      "message": "error"
-    }
-  }
-}
-```
-
-## Term
-
-Use `term` for exact matching on `keyword` fields.
-
-```http
-GET log-product-iis17x-*/_search
-{
-  "query": {
-    "term": {
-      "status": "500"
-    }
-  }
-}
-```
-
-## Search by Time
-
-```http
-GET log-product-iis17x-*/_search
-{
-  "query": {
-    "range": {
-      "log_timestamp": {
-        "gte": "now-1h",
-        "lte": "now"
-      }
-    }
-  }
-}
-```
-
----
-
-# 📄 Documents
-
-## Count Documents
-
-```http
-GET log-product-iis17x-*/_count
-```
-
-## Insert Document
-
-```http
-POST log-product-iis17x-000001/_doc
-{
-  "log_timestamp": "2026-08-26 09:00:00",
-  "message": "test"
-}
-```
-
-## Get Document
-
-```http
-GET log-product-iis17x-000001/_doc/<document_id>
-```
-
-## Update Document
-
-```http
-POST log-product-iis17x-000001/_update/<document_id>
-{
-  "doc": {
-    "message": "updated"
-  }
-}
-```
-
-## Delete Document
-
-```http
-DELETE log-product-iis17x-000001/_doc/<document_id>
-```
-
----
-
-# 🔀 Reindex
+# Reindex
 
 Use `_reindex` when migrating data to a new index.
 
@@ -407,173 +286,6 @@ POST _reindex
     "index": "log-product-iis17x-new"
   }
 }
-```
-
----
-
-# 🧪 Ingest Pipeline
-
-## List Pipelines
-
-```http
-GET _ingest/pipeline
-```
-
-## Get Pipeline
-
-```http
-GET _ingest/pipeline/iis-client-geoip
-```
-
-## Simulate Pipeline
-
-```http
-POST _ingest/pipeline/iis-client-geoip/_simulate
-{
-  "docs": [
-    {
-      "_source": {
-        "client": {
-          "ip": "8.8.8.8"
-        }
-      }
-    }
-  ]
-}
-```
-
-Useful for troubleshooting:
-
-* GeoIP
-* Date processor
-* Grok
-* Rename
-* Set
-* Remove
-* Script
-
----
-
-# 🧩 Shards
-
-## List Shards
-
-```http
-GET _cat/shards?v
-```
-
-## Check Unassigned Shards
-
-```http
-GET _cat/shards?v&h=index,shard,prirep,state,unassigned.reason
-```
-
-## Allocation Explain
-
-Use this when a shard is `UNASSIGNED`.
-
-```http
-GET _cluster/allocation/explain
-```
-
-Common causes:
-
-* Disk watermark
-* Allocation rules
-* Node eligibility
-* Replica allocation
-* Shard limit
-* Awareness
-* Data tier configuration
-
----
-
-# 💾 Disk & Allocation
-
-## Node Disk Allocation
-
-```http
-GET _cat/allocation?v
-```
-
-## Filesystem Statistics
-
-```http
-GET _nodes/stats/fs
-```
-
-## Largest Indices
-
-```http
-GET _cat/indices?v&s=store.size:desc
-```
-
----
-
-# 🔁 Recovery
-
-## Recovery Status
-
-```http
-GET _cat/recovery?v
-```
-
-## Index Recovery
-
-```http
-GET log-product-iis17x-000001/_recovery
-```
-
----
-
-# ⚙️ Tasks
-
-## List Tasks
-
-```http
-GET _tasks
-```
-
-## Detailed Tasks
-
-```http
-GET _tasks?detailed=true
-```
-
-## Reindex Tasks
-
-```http
-GET _tasks?actions=*reindex
-```
-
-Useful when monitoring:
-
-* `_reindex`
-* `_delete_by_query`
-* Snapshot
-* Recovery
-* Forcemerge
-
----
-
-# 📸 Snapshots
-
-## List Repositories
-
-```http
-GET _snapshot
-```
-
-## List Snapshots
-
-```http
-GET _snapshot/<repository>/_all
-```
-
-## Snapshot Status
-
-```http
-GET _snapshot/<repository>/<snapshot>/_status
 ```
 
 ---
@@ -693,29 +405,6 @@ GET logiis17x-alias/_search
   }
 }
 ```
-
----
-
-# ⚡ Quick Reference
-
-| Purpose             | API                                            |
-| ------------------- | ---------------------------------------------- |
-| Cluster Health      | `GET _cluster/health`                          |
-| Nodes               | `GET _cat/nodes?v`                             |
-| Indices             | `GET _cat/indices?v`                           |
-| Shards              | `GET _cat/shards?v`                            |
-| Allocation          | `GET _cat/allocation?v`                        |
-| Aliases             | `GET _cat/aliases?v`                           |
-| Recovery            | `GET _cat/recovery?v`                          |
-| Templates           | `GET _index_template`                          |
-| Template Simulation | `POST _index_template/_simulate_index/<index>` |
-| Mapping             | `GET <index>/_mapping`                         |
-| Settings            | `GET <index>/_settings`                        |
-| ILM Policies        | `GET _ilm/policy`                              |
-| ILM Status          | `GET <index>/_ilm/explain`                     |
-| Tasks               | `GET _tasks`                                   |
-| Pipelines           | `GET _ingest/pipeline`                         |
-| Snapshots           | `GET _snapshot`                                |
 
 ---
 
